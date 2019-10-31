@@ -1,0 +1,14 @@
+
+; Version LPG-td-1.0
+; Seed 77294730
+; Command line: ./lpg -o ./problemas/asfaltado/domain.pddl -f ./problemas/asfaltado/p01.pddl -n 1 -out ./out 
+; Problem ./problemas/asfaltado/p01.pddl
+; Actions having STRIPS duration
+; Time 0.00
+; Search time 0.00
+; Parsing time 0.00
+; Mutex time 0.00
+; NrActions 0
+
+
+no solution
