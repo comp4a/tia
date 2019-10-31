@@ -14,7 +14,7 @@
             (total-fuel-used)
             (boarding-time)
             (debarking-time)
-            )
+)
 
 
 (:durative-action board
