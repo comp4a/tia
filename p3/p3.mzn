@@ -27,8 +27,14 @@ constraint forall (i in 1..18 where capas[i] == E2A) (capas[i-1] != E1A /\ capas
                                                    /\ capas[i-1] != E4B /\ capas[i+1] != E4B);
                                                    
 % Restriccion b)
-constraint forall (i in 1..18 where capas[i] == E2A) (capas[i-1] != E1A /\ capas[i+1] != E1A
-                                                   /\ capas[i-1] != E5A /\ capas[i+1] != E5A
-                                                   /\ capas[i-1] != E9A /\ capas[i+1] != E9A
-                                                   /\ capas[i-1] != E4B /\ capas[i+1] != E4B);
+constraint forall (i in 1..18 where capas[i] == E3A) (capas[i-1] mod 2 != 1 /\ capas[i+1] mod 2 != 1);
+
+% Restriccion c)
+constraint forall (i,j in 1..18 where capas[i] == E4A /\ capas[j] == E4B) (abs(i - j) >= 4);
+
+% Restriccion d)
+constraint forall (i,j in 1..18 where capas[i] == E8A /\ capas[j] == E8B) (abs(i - j) == 2);
+
+% Restriccion e)
+constraint forall (i,j in 1..18 where capas[i] == E5A /\ capas[j] == E5B) (abs(i - j) == 1);
 
