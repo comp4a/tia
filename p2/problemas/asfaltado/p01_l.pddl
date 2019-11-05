@@ -57,8 +57,8 @@
     (compactado Tramo5)
 
     ; Los tramos 1 y 2 no necesitan ser señalizados
-    (señalizado Tramo1)
-    (señalizado Tramo2)
+    (senyalizado Tramo1)
+    (senyalizado Tramo2)
 
     ; El coste de usar la maquinaria es para cada una:
     (= (coste-cisterna) 25)
@@ -79,6 +79,15 @@
     (= (distancia Tramo3 Tramo5) 7)
     (= (distancia Tramo4 Tramo5) 6)
     
+    ; Las duraciones de las acciones de obra se inicializan segun el enunciado
+    (= (duracion-compactado) 250)
+    (= (duracion-pavimentado) 190)
+    (= (duracion-aplastado) 150)
+    (= (duracion-pintado) 30)
+    (= (duracion-vallado) 120)
+    (= (duracion-senyalizado) 70)
+)
+
 
  ; Las condiciones para acabar son..
  (:goal
@@ -100,7 +109,7 @@
     )
 )   
     
-  ;La función objetivo viene dada por la siguiente métrica
+  ; La función objetivo viene dada por la siguiente métrica
   (:metric minimize (+ (* 0.2 (total-time)) (* 0.5 (coste-total))))
     
 )

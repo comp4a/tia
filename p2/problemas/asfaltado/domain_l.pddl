@@ -1,4 +1,4 @@
-(define (asfaltado)
+(define (domain asfaltado)
 
     ; Requisitos que ha de ser capaz de soportar el planificador
     ; para trabajar este dominio
@@ -31,11 +31,11 @@
         ; Nos permite conocer si un tramo tiene pintado de marcas varias
         (pintado ?t - tramo)
         ; Nos permite conocer si un tramo tiene señales y paneles luminosos
-        (señalizado ?t - tramo)
+        (senyalizado ?t - tramo)
         ; Nos permite conocer si un tramo, una maquina o una cuadrilla están disponibles
         ; Un tramo no está disponible si está realizando alguna acciónj
         ; Una maquina/cuadrilla no está disponible si está realizando alguna acción
-        (disponible ?t - tramo)
+        (disponible ?t - (either cuadrilla pavimentadora compactadora cisterna tramo))
         ; Cuando un tramo tiene realizadas las obras finales requeridas pasa a estar terminado
         (terminado ?t - tramo)
     )
@@ -59,6 +59,14 @@
         (coste-compactadora)
         ; Coste acumulado de realizar las obras
         (coste-total)
+
+        ; Duracion de acciones de obras
+        (duracion-compactado)
+        (duracion-pavimentado)
+        (duracion-aplastado)
+        (duracion-pintado)
+        (duracion-vallado)
+        (duracion-senyalizado)
     )
 
     ; Las acciones tienen: nombre, lista de parámetros,
@@ -70,7 +78,7 @@
         ; Requerimos saber sobre el terreno y una cuadrilla para determinar esta acción
         :parameters (?t - tramo ?cd - cuadrilla)
         ; El compactado dura 250 Uds
-        :duration (= ?duration 250)
+        :duration (= ?duration (duracion-compactado))
         ; Si el tramo no está compactado es porque está deteriorado
         ; Si está deteriorado y disponible pasamos a compactarlo
         :condition (and (at start (not (compactado ?t)))
@@ -202,7 +210,7 @@
     )
 
     ; Acción de colocación de señales y carteles luminosos
-    (:durative-action Señalizar
+    (:durative-action Senyalizar
         ; Requerimos saber sobre el tramo y una cuadrilla para esta acción
         :parameters (?t - tramo ?cd - cuadrilla)
         ; El señalizado dura 70 Uds
@@ -211,7 +219,7 @@
         ; La cuadrilla debe estar disponible
         :condition (and (at start(disponible ?t))
                         (at start(disponible ?cd))
-                        (at start(not (señalizado ?t)))
+                        (at start(not (senyalizado ?t)))
                         (at start(aplastado ?t))
                    )
         ; Empieza la acción:
@@ -222,7 +230,7 @@
                      (at start (not (disponible ?cd)))
                      (at end (disponible ?t))
                      (at end (disponible ?cd))
-                     (at end (señalizado ?t))
+                     (at end (senyalizado ?t))
                 )
     )
 
@@ -235,7 +243,7 @@
         :duration (= ?duration (* (distancia ?t1 ?t2) velocidad-pesada))
         ; La máquina debe estar en el tramo de inicio y disponible
         :condition (and (at start (disponible ?mp))
-                        (en ?mp ?t1)
+                        (at start (en ?mp ?t1))
                    )
         ;  
         :effect (and (at start (not (disponible ?mp)))
@@ -245,17 +253,36 @@
                 )
     )
 
+    ; Acción de transportar cuadrillas
+    (:durative-action Transporte-Cuadrilla
+        ; Requerimos saber sobre los tramos y que cuadrilla
+        :parameters (?t1 - tramo ?t2 - tramo ?cd - cuadrilla)
+        ; El transporte de maquinaria pesada dura en función de la distancia entre tramos
+        ; y la velocidad de desplazamiento de la maquinaria pesada
+        :duration (= ?duration (distancia ?t1 ?t2))
+        ; La cuadrilla debe estar en el tramo de inicio y disponible
+        :condition (and (at start (disponible ?cd))
+                        (at start (en ?cd ?t1))
+                   )
+        ;  
+        :effect (and (at start (not (disponible ?cd)))
+                     (at start (not (en ?cd ?t1)))
+                     (at end (disponible ?cd))
+                     (at end (en ?cd ?t2))
+                )
+    )
+
     ; Acción de finalizar obras del tramo
     (:durative-action Terminar
         ; Requerimos saber sobre el tramo
-        :parameters (?t1 - tramo)
+        :parameters (?t - tramo)
         ; La acción de finalizar es instantaea una vez se cumplan las condiciones
         :duration (= ?duration 0)
         ; El tramo debe tener todas las condiciones de obra final
-        :condition (and (at start (disponible ?c))
-                        (at start (señalizado ?c))
-                        (at start (pintado ?c))
-                        (at start (vallado ?c))
+        :condition (and (at start (disponible ?t))
+                        (at start (senyalizado ?t))
+                        (at start (pintado ?t))
+                        (at start (vallado ?t))
                    )
         ; El terreno pasa a estar terminado y no disponible
         :effect (and (at end (terminado ?t))
