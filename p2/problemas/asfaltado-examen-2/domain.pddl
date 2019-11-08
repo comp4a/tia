@@ -11,12 +11,8 @@
 		;estado del proceso de reparacion
 		(estropeado ?t - tramo)
 
-		(no_necesita_compactado ?t - tramo)
-		(no_necesita_senalizado ?t - tramo)
-
 		(compactado ?t - tramo)
 		(pavimentado ?t - tramo)
-		(aplastado ?t - tramo)
 
 		(no_pintado ?t - tramo)
 		(no_vallado ?t - tramo)
@@ -44,19 +40,6 @@
 
 		(coste_total)
 )
-
-;En el caso de que no se necesario compactar se compacta automaticamente y sin costes
-(:durative-action no_compactar
-:parameters (?t - tramo)
-:duration (= ?duration 0)
-:condition (and 
-	(at start (no_necesita_compactado ?t))
-	(at start (estropeado ?t))
-)
-:effect (and 
-	(at start (not (estropeado ?t)))
-	(at end (compactado ?t))
-))
 
 
 (:durative-action compactar
@@ -120,6 +103,7 @@
 	(at start (en ?c ?t))
 )
 :effect (and
+	(at end (not(no_pintado ?t)))
 	(at end (pintado ?t))
 	(at start (not (disponiblet ?t)))
 	(at end (disponiblet ?t))
@@ -135,22 +119,10 @@
 	(at start (en ?c ?t))
 )
 :effect (and
+	(at end (not(no_vallado ?t)))
 	(at end (vallado ?t))
 	(at start (not (disponiblet ?t)))
 	(at end (disponiblet ?t))
-))
-
-
-;En el caso de que no sea necesario el senalizado se señaliza automaticamente y sin costes
-(:durative-action no_senalizar
-:parameters (?t - tramo)
-:duration (= ?duration 0)
-:condition (and 
-	(at start (no_necesita_senalizado ?t))
-	(at start (no_senalizado ?t))
-)
-:effect (and
-	(at end (senalizado ?t))
 ))
 
 
@@ -163,6 +135,7 @@
 	(at start (en ?c ?t))
 )
 :effect (and    
+	(at end (not(no_senalizado ?t)))
 	(at start (not (disponiblet ?t)))
 	(at end (disponiblet ?t))
 	(at end (senalizado ?t))

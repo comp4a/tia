@@ -18,6 +18,7 @@
 	Tramo3 - tramo
 	Tramo4 - tramo
 	Tramo5 - tramo
+	Tramo6 - tramo
 )
 (:init
     (disponiblec Cuadrilla1)
@@ -36,6 +37,7 @@
     (disponiblet Tramo3)
     (disponiblet Tramo4)
     (disponiblet Tramo5)
+    (disponiblet Tramo6)
 
     (en Cuadrilla1 Tramo1)
     (en Cuadrilla2 Tramo1)
@@ -49,15 +51,31 @@
     (en Compactadora1 Tramo5)
 
     (estropeado Tramo1)
-    (no_necesita_senalizado Tramo1)
+    ;(no_necesita_senalizado Tramo1)
+    (senalizado Tramo1)
     (estropeado Tramo2)
-    (no_necesita_senalizado Tramo2)
-    (estropeado Tramo3)
-    (no_necesita_compactado Tramo3)
-    (estropeado Tramo4)
-    (no_necesita_compactado Tramo4)
-    (estropeado Tramo5)
-    (no_necesita_compactado Tramo5)
+    ;(no_necesita_senalizado Tramo2)
+    (senalizado Tramo2)
+    ;(estropeado Tramo3)
+    ;(no_necesita_compactado Tramo3)
+    (compactado Tramo3)
+    ;(estropeado Tramo4)
+    ;(no_necesita_compactado Tramo4)
+    (compactado Tramo4)
+    ;(estropeado Tramo5)
+    ;(no_necesita_compactado Tramo5)
+    (compactado Tramo5)
+    
+    
+    (compactado Tramo6)
+    (conectado Tramo6 Tramo3)
+    (conectado Tramo3 Tramo6)
+    (= (distancia Tramo3 Tramo6) 4)
+    (= (distancia Tramo6 Tramo3) 4)
+    (conectado Tramo6 Tramo5)
+    (conectado Tramo5 Tramo6)
+    (= (distancia Tramo6 Tramo5) 3)
+    (= (distancia Tramo5 Tramo6) 3)
 
     (conectado Tramo1 Tramo2)
     (conectado Tramo2 Tramo3)
@@ -106,6 +124,7 @@
     (terminado Tramo3)
     (terminado Tramo4)
     (terminado Tramo5)
+    (terminado Tramo6)
 
     (en Cuadrilla1 Tramo1)
     (en Cuadrilla2 Tramo5)
@@ -117,5 +136,5 @@
 
 ))
 
-(:metric minimize (+ (* 0.2 (total-time))  (* 0.5 (coste_total))))
+(:metric minimize (coste_total))
 )

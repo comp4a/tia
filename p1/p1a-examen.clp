@@ -65,7 +65,15 @@
 
 (deftemplate trafico 0 300 prioridad
 	( 	(baja (z 20 80))
+		(media (pi 50 150))
 		(alta (s 120 250))
+	)
+)
+
+(deftemplate lluvia 0 1000 litros_ano
+	( 	(poca (200 1) (300 0))
+		(media (pi 50 150))
+		(alta (500 0) (650 1))
 	)
 )
 	
@@ -80,17 +88,17 @@
 	(bind ?Rid (read))
 	(printout t "Introduzca el grado de degradacion del asfalto (0 - 100)" crlf)
 	(bind ?Rasf (read))
-        (printout t "Introduzca la temperatura extrema minima a la que se vio sometida la carretera" crlf)
-        (bind ?Rtmin (read))
+	(printout t "Introduzca la temperatura extrema minima a la que se vio sometida la carretera" crlf)
+	(bind ?Rtmin (read))
 	(printout t "Introduzca la temperatura extrema maxima a la que se vio sometida la carretera" crlf)
 	(bind ?Rtmax (read))
 	(printout t "Introduzca el numero de vehiculos que transitan la carretera por hora" crlf)
 	(bind ?Rtraf (read))
 	 
-	(fuzzify agrietamiento ?Rasf 0.1)
-	(fuzzify temperatura ?Rtmax 0.1)
-	(fuzzify temperatura ?Rtmin 0.1)
-	(fuzzify trafico ?Rtraf 0.1)
+	(fuzzify agrietamiento ?Rasf 0)
+	(fuzzify temperatura ?Rtmax 0)
+	(fuzzify temperatura ?Rtmin 0)
+	(fuzzify trafico ?Rtraf 0)
 	
 	(assert (carretera (id ?Rid) (agrietamiento ?Rasf) (temperaturaMin ?Rtmin)
 			(temperaturaMax ?Rtmax) (trafico ?Rtraf))) 
@@ -175,6 +183,19 @@
  	(assert (necesidad_reasfaltado very urgente))
 )
 
+
+(defrule trafico_medio
+ 	(trafico media)
+ =>
+ 	(assert (necesidad_reasfaltado more-or-less urgente))
+)
+
+(defrule lluvia_alta
+ 	(lluvia alta)
+ =>
+ 	(assert (necesidad_reasfaltado extremely urgente))
+)
+
 ;;;;;;;;;;;;;;;;;
 ;; DEFUSIFICAR ;;
 ;;;;;;;;;;;;;;;;;
@@ -197,4 +218,10 @@
 
 
 
+(defrule aviso
+ 	(trafico extremely alta)
+	?f <- (carretera (id ?Rid) (agrietamiento ?Rasf) (temperaturaMin ?Rtmin) (temperaturaMax ?Rtmax) (trafico ?Rtraf))
+ =>
+ 	(printout t "Alerta trafico extremo en la carretera " ?Rid crlf)
+)
 
