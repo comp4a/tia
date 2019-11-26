@@ -16,7 +16,7 @@ constraint (
                                                                                   
 % Restriccion b)
 constraint forall (i in 1..9 where i !=3) (
-    abs(E[A,i] - E[A,3]) != 1 
+    abs(E[A,i] - E[A,7]) != 1 
 );
 
 % Restriccion c)
@@ -29,7 +29,10 @@ constraint(
     abs(E[A,8] - E[B,8]) == 2
 );
 
-% e) por ahora no se pone porque entra en contradiccion con la h)
+% e)
+constraint(
+    abs(E[A,5] - E[B,5]) == 1
+);
 
 % f)
 constraint exists(i in 1..2)(
@@ -51,7 +54,7 @@ constraint(
         abs(E[A,5] - E[A,3]) == 1 \/
         abs(E[A,5] - E[A,7]) == 1
     ) /\
-    abs(E[A,5] - E[B,5]) != 1
+    abs(E[A,6] - E[B,5]) != 1
 );
 
 % i)
@@ -69,3 +72,8 @@ output
     | k in 1..18 , i in 1..2 ,j in 1..9 where fix(E[i,j]) == k ]; 
 
 
+ 
+%solve minimize  (abs(E[A,8]-E[A,9])+abs(E[B,1] - E[B,2]));
+
+solve maximize  (abs(E[A,3]-E[B,9]) - abs(E[A,7] - E[B,7]));
+ 
