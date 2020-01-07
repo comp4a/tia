@@ -3,6 +3,8 @@ int: A = 1;
 int: B = 2;
 
 % Array que indica el orden de aplicacion de las capas
+% En cada elemento se almacena la posición que ocupara
+%    en la lista resultante.
 array [1..2,1..9] of var 1..18: E;
 constraint alldifferent (E);
 
@@ -15,7 +17,7 @@ constraint (
 );
                                                                                   
 % Restriccion b)
-constraint forall (i in 1..9 where i !=3) (
+constraint forall (i in 1..9) (
     abs(E[A,i] - E[A,7]) != 1 
 );
 
@@ -68,12 +70,14 @@ constraint forall(i,j in 1..6 where i > j)(
 );
 
 output 
-    [if i = 1 then "EA" else "EB" endif ++ show(j)++"\t"
-    | k in 1..18 , i in 1..2 ,j in 1..9 where fix(E[i,j]) == k ]; 
+%    [if i = 1 then "EA" else "EB" endif ++ show(j)++"\t"
+%    | k in 1..18 , i in 1..2 ,j in 1..9 where fix(E[i,j]) == k ]; 
 
+[show(E[i,j]) ++ "\t" ++ if j = 9 then "\n" else "" endif | i in 1..2 ,j in 1..9 ];
 
- 
+% 2)  
 %solve minimize  (abs(E[A,8]-E[A,9])+abs(E[B,1] - E[B,2]));
 
-solve maximize  (abs(E[A,3]-E[B,9]) - abs(E[A,7] - E[B,7]));
+% 3)
+%solve maximize  (abs(E[A,3]-E[B,9]) - abs(E[A,7] - E[B,7]));
  
