@@ -69,15 +69,38 @@ constraint forall(i,j in 1..6 where i > j)(
     E[B,i] < E[B,j]
 );
 
+% Examen
+constraint forall(i in 1..2)(
+    E[i,2] != 1 /\
+    E[i,2] != 18 /\
+    (
+       E[i,2] <= 4 \/
+       E[i,2] >= 15
+    )
+);
+
+
+% “La capa X1 no debe aplicarse junto a ninguna otra capa de tipo X.”
+%constraint forall(i in 1..9, j in 1..2)(
+%    abs(E[j,1] - E[j,i]) != 1
+%);
+
+% “La capa X3 no debe aplicarse junto a ninguna otra capa de tipo X.”
+%constraint forall(i in 1..9, j in 1..2)(
+%    abs(E[j,3] - E[j,i]) != 1
+%);
+
 output 
-%    [if i = 1 then "EA" else "EB" endif ++ show(j)++"\t"
-%    | k in 1..18 , i in 1..2 ,j in 1..9 where fix(E[i,j]) == k ]; 
+%   [if i = 1 then "EA" else "EB" endif ++ show(j)++"\t"
+%   | k in 1..18 , i in 1..2 ,j in 1..9 where fix(E[i,j]) == k ]; 
 
 [show(E[i,j]) ++ "\t" ++ if j = 9 then "\n" else "" endif | i in 1..2 ,j in 1..9 ];
 
 % 2)  
-solve minimize  (abs(E[A,8]-E[A,9])+abs(E[B,1] - E[B,2]));
+%solve minimize  (abs(E[A,8]-E[A,9])+abs(E[B,1] - E[B,2]));
 
 % 3)
 %solve maximize  (abs(E[A,3]-E[B,9]) - abs(E[A,7] - E[B,7]));
  
+% Examen)  
+%solve minimize( abs(E[A,2]-E[B,2]) );

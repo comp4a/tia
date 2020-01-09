@@ -34,11 +34,23 @@ public class CuadrillasEvaluator implements Evaluator<ArrayList<Integer>>
 			}
 			*/
 			
-			if (c1<3 || c2<3 || c3<3) {
+			/*
+Si en un mismo turno están las cuadrillas 2 y 4 la productividad se incrementa en 100 unidades.
+Si en un mismo turno están las cuadrillas 1 y 6 la productividad se decrementa en 50 unidades.
+			 */
+			
+			if(phenotype.get(2-1) == phenotype.get(4-1) ) {
+				productividad += 100;
+			}
+			
+			if(phenotype.get(1-1) == phenotype.get(6-1) ) {
+				productividad -= 50;
+			}
+			
+			if (c1<2 || c2<2 || c3<2) {
 				coste=Integer.MAX_VALUE;
 				productividad = Integer.MIN_VALUE;
 			}
-			
 			
 			
 			Objectives objectives = new Objectives();
